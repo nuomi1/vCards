@@ -83,10 +83,9 @@ test('Validation/link-https-path', async () => {
       continue
     }
 
-    const { protocol } = new URL(url)
-    // Bun 的 URL 解析会把裸域名规范化出 "/" pathname，因此用原始字符串判定 path
-    const hasPath = /^https?:\/\/[^/?#]*\//.test(url)
-    if (protocol !== 'https:' || !hasPath) {
+    // 单个正则同时判定 https 协议与 path 有值：Bun 的 URL 解析会规范化裸域名的 pathname，不能改用解析式判定
+    const isHttpsWithPath = /^https:\/\/[^/?#]*\//.test(url)
+    if (!isHttpsWithPath) {
       invalidations.push(`${filePath}: ${url}`)
     }
   }
